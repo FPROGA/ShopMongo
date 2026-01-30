@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Мой магазин</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/">🏠 Главная</a>
+    <a href="/catalog">🛒 Каталог</a>
+    {% if user %}
+      <a href="/profile">👤 {{ user.username }}</a>
+      <form action="/api/users/logout" method="POST" style="display: inline;">
+      <button class="logout" type="submit">
+      🚪 Выход
+      </button>
+      </form>
+    {% else %}
+      <a href="/login">🔐 Вход</a>
+    {% endif %}
+  </nav>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

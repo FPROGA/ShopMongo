@@ -1,0 +1,72 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<h1>🛒 Каталог товаров</h1>
+
+<div class="products-grid">
+  {% for product in products %}
+    <div class="product-card">
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.description }}</p>
+      <div class="price">{{ product.price }} ₽</div>
+      
+      {% if user %}
+        <form action="/api/orders" method="POST" class="buy-form">
+          <!-- ✅ ПРАВИЛЬНЫЙ JSON с кавычками -->
+          <input type="hidden" name="items" 
+                 value='[{"product_id": "{{ product._id.toString() }}", "quantity": 1}]'>
+          <button type="submit" class="btn buy-btn">🛒 Купить</button>
+        </form>
+      {% else %}
+        <a href="/login" class="btn disabled">Авторизуйтесь для покупки</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+// Альтернатива: использование fetch для предотвращения проблем с формами
+document.addEventListener('DOMContentLoaded', function() {
+  const forms = document.querySelectorAll('.buy-form');
+  
+  forms.forEach(form => {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const itemsInput = this.querySelector('input[name="items"]');
+      let items;
+      
+      try {
+        items = JSON.parse(itemsInput.value);
+      } catch (error) {
+        alert('Ошибка в данных товара');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ items })
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          alert(`Заказ создан! Номер: ${result.order_id}`);
+          window.location.href = '/profile';
+        } else {
+          const errorText = await response.text();
+          alert(`Ошибка: ${errorText}`);
+        }
+      } catch (error) {
+        alert('Ошибка сети: ' + error.message);
+      }
+    });
+  });
+});
+</script>
+
+{% endblock %}

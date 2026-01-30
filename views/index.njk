@@ -1,0 +1,38 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="hero">
+  <h1>🛍️ Добро пожаловать в Мой магазин!</h1>
+  
+  {% if authError %}
+    <div class="alert error">❌ Неверный логин или пароль</div>
+  {% endif %}
+  {% if success %}
+    <div class="alert success">✅ Успешно!</div>
+  {% endif %}
+</div>
+
+{% if not user %}
+  <!-- Форма входа -->
+  <div class="login-form">
+    <h2>🔐 Быстрый вход</h2>
+    <form action="/api/users/login" method="POST">
+      <input class="form-input" type="text" name="username" placeholder="Логин" required>
+      <input class="form-input" type="password" name="password" placeholder="Пароль" required>
+      <button class="submit-btn" type="submit">Войти</button>
+    </form>
+  </div>
+{% endif %}
+
+<!-- Популярные товары -->
+<div class="products-grid">
+  {% for product in products %}
+    <div class="product-card">
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.description }}</p>
+      <div class="price">{{ product.price }} ₽</div>
+      <a href="/catalog" class="btn">Подробнее</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

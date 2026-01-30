@@ -1,0 +1,23 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="hero">
+  <h1>🔐 Регистрация</h1>
+  
+  {% if authError %}
+    <div class="alert error">❌ Неверный логин или пароль</div>
+  {% endif %}
+</div>
+
+<div class="login-form">
+  <h2>Вход</h2>
+  <form action="/api/users/register" method="POST">
+    <input class="form-input"  type="text" name="username" placeholder="Логин" required>
+    <input class="form-input"  type="password" name="password" placeholder="Пароль" required>
+    <input class="form-input"  type="email" name="email" placeholder="Email" required>
+    <button class="submit-btn" type="submit">Зарегистрироваться</button>
+  </form>
+  
+  <p><a href="/login">Есть аккаунт? Войти </a></p>
+</div>
+{% endblock %}

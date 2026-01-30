@@ -1,0 +1,30 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<h1>👤 Личный кабинет</h1>
+
+<div class="profile-info">
+  <h2>Привет, {{ user.username }}!</h2>
+  <p>Email: {{ user.email or 'Не указан' }}</p>
+</div>
+
+<h2>📋 Ваши заказы</h2>
+{% if orders.length > 0 %}
+  <div class="orders-list">
+    {% for order in orders %}
+      <div class="order-card">
+        <div class="order-header">
+          <span>Заказ #{{ order._id.toString().slice(-6) }}</span>
+          <span class="price">{{ order.total_price }} ₽</span>
+          <span class="status">{{ order.status }}</span>
+        </div>
+        <div class="order-date">
+          {{ order.created_at }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>У вас пока нет заказов</p>
+{% endif %}
+{% endblock %}
